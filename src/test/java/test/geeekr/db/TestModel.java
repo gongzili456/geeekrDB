@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.UUID;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.junit.Test;
@@ -14,11 +15,20 @@ import com.geeekr.db.QueryHelper;
 public class TestModel {
 
     @Test
+    public void trans() {
+        Post p = new Post();
+        p = p.get(4L);
+        System.out.println(">>>>>: " + p);
+
+        p.delete();
+    }
+
+    @Test
     public void save() {
         Post p = new Post();
         p.setTitle("Hello title");
         p.setStatus("publish");
-        p.setSlug("hello-title");
+        p.setSlug(UUID.randomUUID().toString());
         p.setHtml("<a>Hello World</a>");
         p.setMarkdown("###Hello World");
         p.setCreatedAt(new Date());
@@ -55,7 +65,7 @@ public class TestModel {
 
     @Test
     public void update() {
-        QueryHelper.update("update posts set status = ?, featured = ? where id = ?", "published", false, 2L);
+        QueryHelper.update("update posts set status = ?, featured = ? where id = ?", "published", false, 5L);
     }
 
     @Test

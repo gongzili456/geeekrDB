@@ -131,14 +131,10 @@ public class Model implements Serializable {
         }
         sql.append(")");
 
-        // Object[] params = new Object[fields.length];
-        // for (int i = 0; i < fields.length; i++) {
-        // params[i] = beanProp.get(fields[i]);
-        // }
-        // return (long) QueryHelper.update(sql.toString(), params);
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
+
             ps = QueryHelper.getConnection().prepareStatement(sql.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
             for (int i = 0; i < fields.length; i++) {
                 ps.setObject(i + 1, beanProp.get(fields[i]));

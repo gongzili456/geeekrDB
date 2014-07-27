@@ -1,7 +1,6 @@
 package com.geeekr.db;
 
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DBManager {
-    private final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().getClass());
+    private final static Logger LOGGER = LoggerFactory.getLogger(DBManager.class);
     private static ThreadLocal<Connection> conns = new ThreadLocal<Connection>();
     private static DataSource dataSource;
     private static boolean show_sql = false;
@@ -71,7 +70,7 @@ public class DBManager {
             con = dataSource.getConnection();
             conns.set(con);
         }
-        return (show_sql && Proxy.isProxyClass(con.getClass())) ? new DebugConnection(con).getConnection() : con;
+        return (show_sql && !Proxy.isProxyClass(con.getClass())) ? new DebugConnection(con).getConnection() : con;
     }
 
     /**
@@ -120,7 +119,7 @@ public class DBManager {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             String name = method.getName();
             if ("prepareStatement".equals(name) || "createStatement".equals(name)) {
-                LOG.info("[SQL] >>> ", args[0]);
+                LOG.info("[SQL] >>> ", args);
             }
             return method.invoke(connection, args);
         }
